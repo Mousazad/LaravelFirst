@@ -1,0 +1,17 @@
+>git --version
+>git init -b master
+>git status
+>git add --all
+>git config --global user.email "you@example.com"
+>git config --global user.name "Your Name"
+>git commit -m "initial commit"
+>git push origin master
+>git clone https://github.com/Mousazad/GitTest
+>git fetch origin master
+>git checkout master
+>git branch
+>git push
+>git pull
+>git log
+>git checkout c7b6a8626e4c7237b1caca5a99559b1763d71470
+>git switch -
