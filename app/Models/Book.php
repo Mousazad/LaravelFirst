@@ -12,7 +12,7 @@ class Book extends Model
 	
 	public function authors()    
 	{        				
-		return $this->belongsToMany('App\Models\Author');
+		return $this->belongsToMany('App\Models\Author')->withTimestamps();
    	}
 
 }
