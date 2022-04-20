@@ -1,12 +1,22 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Database\Eloquent\Builder;
 use App\Models\Book;
+use App\Models\Author;
 use Illuminate\Http\Request;
 
 class BookController extends Controller
 {
+	
+	
+	public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('admin')->except(['index','show']);;
+    }
+	
+	
     /**
      * Display a listing of the resource.
      *
@@ -53,6 +63,7 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
+		$book->load('authors');
         return view('book.show',['book' => $book]);
     }
 
@@ -64,7 +75,9 @@ class BookController extends Controller
      */
     public function edit(Book $book)
     {
-        return view('book.edit',['book' => $book]);
+		$all_authors = Author::all();
+		$book->load('authors');
+        return view('book.edit',['book' => $book, 'all_authors' => $all_authors]);
     }
 
     /**
@@ -83,6 +96,36 @@ class BookController extends Controller
 		$book->Update(["title" =>$request->title ,"publication-year"=>$request->pubyear ]);
 		return view('book.show',['book' => $book]);
     }
+
+
+	/**
+     * Remove the specified author from book's authors.
+     *
+     * @param  \App\Models\Book  $book
+     * @param  int  $author
+     * @return \Illuminate\Http\Response
+     */
+    public function removeAuthor(Request $request, Book $book, $author)
+	{
+		$book->authors()->detach($author);
+		return back()->withInput();
+	}
+	
+	/**
+     * Insert an author to book's authors.
+     *
+     * @param  \App\Models\Book  $book
+     * @param  int  $author
+     * @return \Illuminate\Http\Response
+     */
+    public function addAuthor(Request $request, Book $book)
+	{
+		$author = $request->author;
+		$count = Book::where('id',$book->id)->whereHas('authors', function (Builder $query) use ($author) {$query-> where('authors.id', $author);})->count();
+		if($count == 0)
+			$book->authors()->attach($author);
+		return back()->withInput();
+	}
 
     /**
      * Remove the specified resource from storage.

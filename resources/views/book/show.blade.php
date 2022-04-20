@@ -19,6 +19,11 @@
 					<tr><td style="color:blue;">last update:</td><td>{{$book->updated_at}}</td></tr>
 					</table>
 					<hr>
+					<h3 style="font-size:1.25em;color:#0083b3"> Book Authors: </h3>
+					@foreach($book->authors as $author)
+						<p><a href="{{ route('showAuthor',[$author]) }}" class="underline">  {{$author->fname}} {{$author->lname}}  </a></p>
+					@endforeach
+					<hr>
 					<a href="{{ route('booksIndex') }}" class="underline">  back  </a>
 					<td><a href="{{ route('editBook',[$book->id]) }}" class="underline" style="margin-left: 10px;" > edit </a></td>
                 </div>
