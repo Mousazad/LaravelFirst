@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Models\Book;
 use App\Models\Author;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class BookController extends Controller
 {
@@ -49,8 +50,22 @@ class BookController extends Controller
 		$request->validate([
 			'title' => 'required|string|max:255',
 			'pubyear' => 'required|int|min:0|max:2022',
+			'cover' => 'required|mimes:jpg,bmp,png|max:2048'
 		]);
-				
+		
+		
+		$coverfile = $request->file('cover');
+		$coverfilename = $coverfile->getClientOriginalName();
+		$newcoverfilename = sha1(time().'_'.rand(1000000000,1999999999).'_'.rand(1000000000,1999999999).'_'.$coverfilename);
+
+		Storage::disk('local')->putFileAs(
+			'public/files',
+			$coverfile,
+			$newcoverfilename
+		);
+		return Storage::download('public/files/'.$newcoverfilename);
+		
+			
         Book::Create(["title" =>$request->title ,"publication-year"=>$request->pubyear ]);
 		return redirect()->action([BookController::class, 'index']);
     }

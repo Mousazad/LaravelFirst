@@ -27,7 +27,7 @@
 				</ul>
 			</div>
 		@endif
-		<form action="{{route('storeBook')}}" method="post">
+		<form action="{{route('storeBook')}}" method="post" enctype="multipart/form-data" >
 			@csrf
 			<div class="container-fluid ">
 				<div class="row">
@@ -39,7 +39,13 @@
 					<div class="col-lg-2 col-md-2  mt-3"> <input class="form-control" type="number" min=0 max=2030 name="pubyear"  placeholder="Enter publication year" required ></div>
 				</div>
 			
-				
+			
+				<div class="row">
+					<div class="col-lg-2 col-md-2 mt-3 "> Cover file: </div>
+					<div class="col-lg-3 col-md-3  mt-3"> <input class="form-control" type="file" name="cover" id="cover"> </div>
+				</div>
+			
+		
 				<div class="col-lg-2 col-md-2"> <button type="submit" class="btn btn-success"> Add </button></div>
 			</div>
 		</form>
