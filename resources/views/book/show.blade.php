@@ -11,6 +11,7 @@
                 <div class="p-6 bg-white border-b border-gray-200">
 					<h2 style="color:green;font-size:1.5em "> Book Information: </h2>
 					<hr>
+					<img src={{$cover_url}} alt="Cover Image Avialable" style="width:200px;"> 
 					<table>
 					<tr><td style="color:blue;">id:</td><td>{{$book->id}}</td></tr>
 					<tr><td style="color:blue;">title:</td><td>{{$book->title}}</td></tr>

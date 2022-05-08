@@ -56,17 +56,18 @@ class BookController extends Controller
 		
 		$coverfile = $request->file('cover');
 		$coverfilename = $coverfile->getClientOriginalName();
+		$extension = $coverfile->extension();
 		$newcoverfilename = sha1(time().'_'.rand(1000000000,1999999999).'_'.rand(1000000000,1999999999).'_'.$coverfilename);
+		$newcoverfilename = $newcoverfilename.'.'.$extension;
 
 		Storage::disk('local')->putFileAs(
 			'public/files',
 			$coverfile,
 			$newcoverfilename
 		);
-		return Storage::download('public/files/'.$newcoverfilename);
 		
 			
-        Book::Create(["title" =>$request->title ,"publication-year"=>$request->pubyear ]);
+        Book::Create(["title" =>$request->title ,"publication-year"=>$request->pubyear, 'cover_file_name'=> $newcoverfilename, 'original_cover_file_name'=>$coverfilename]);
 		return redirect()->action([BookController::class, 'index']);
     }
 
@@ -79,7 +80,8 @@ class BookController extends Controller
     public function show(Book $book)
     {
 		$book->load('authors');
-        return view('book.show',['book' => $book]);
+		$url = Storage::url('public/files/'.$book->cover_file_name); 
+        return view('book.show',['book' => $book,'cover_url'=>$url ]);
     }
 
     /**
