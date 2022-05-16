@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\Book;
 use App\Http\Controllers\Api\BookController;
+use App\Http\Controllers\Api\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +23,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 */
 
+Route::post('/login',[UserController::class, 'login']);
+Route::middleware('auth:sanctum')->post('/userinfo',[UserController::class, 'getUserInfo']);
+
+
 Route::post('/books/list',[BookController::class, 'getAllBooks']);
-Route::post('/books/add',[BookController::class, 'store']);
+Route::middleware('auth:sanctum')->post('/books/add',[BookController::class, 'store']);
 Route::post('/books/show',[BookController::class, 'show']);
