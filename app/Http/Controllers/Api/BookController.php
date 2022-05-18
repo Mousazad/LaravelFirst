@@ -13,7 +13,7 @@ class BookController extends Controller
 	function getAllBooks()
 	{
 		$books = Book::all();
-		return $books;
+		return response()->json($books);
 	}
 	
     public function store(Request $request)
@@ -24,12 +24,12 @@ class BookController extends Controller
 		]);
 		
         $book = Book::Create(["title" =>$request->title ,"publication-year"=>$request->pubyear]);
-		return $book;
+		return response()->json($book);
 	}
     public function show(Request $request)
     {
 		$book = Book::find($request->id);
-		return $book->load('authors');
+		return response()->json($book->load('authors'));
     }
 	
 	

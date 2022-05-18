@@ -51,4 +51,17 @@ Route::middleware(['auth','admin'])->group(function () {
 	Route::post('/authors/update/{author}',[AuthorController::class, 'update'])->name('updateAuthor');
 });
 
+Route::get('/test_sessions', function () {
+	
+	if(session()->exists('count') && session('count')==10)
+		session()->forget('count');
+	
+	if(session()->missing('count'))
+		session(['count' => 0]);
+	else{
+		//session(['count' => session('count')+1]);
+		session()->increment('count');
+	}
+    return session('count');
+});
 
