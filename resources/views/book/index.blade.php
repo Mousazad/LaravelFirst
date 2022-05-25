@@ -1,15 +1,23 @@
 @extends('layouts.hello_layout')
 @section('onvan', 'Books')
 @section('mohtava')
+<style>
+a.disabled {
+  pointer-events: none;
+  cursor: default !important;
+  text-decoration: none !important;
+  color: #7F8C8D !important;
+}
+</style>
 	<div class="p-6 bg-white border-b border-gray-200">
 		<h1 > It is list of all books: </h1>
 		<hr>
 		<table>
 		@foreach($bks as $b)
 		<tr>
-		<td><a href="{{ route('showBook',[$b]) }}" class="underline">  {{$b->title}}  </a></td>
-		<td><a href="{{ route('delBook',[$b]) }}" class="underline" style="margin-left: 10px;color:#E74C3C" onclick="return confirm('Are you sure you want to delete?')">   del it! </a></td>
-		<td><a href="{{ route('editBook',[$b]) }}" class="underline" style="margin-left: 10px;color:#0083b3" >   edit </a></td>
+			<td><a href="{{ route('showBook',[$b]) }}" class="underline">  {{$b->title}}  </a></td>
+			<td><a href="{{ route('delBook',[$b]) }}" @if(!$b->dflag) class="disabled" @else class="underline" @endif style="margin-left: 10px;color:#E74C3C" onclick="return confirm('Are you sure you want to delete?')">   del it! </a></td>
+			<td><a href="{{ route('editBook',[$b]) }}" @if(!$b->eflag) class="disabled" @else class="underline" @endif style="margin-left: 10px;color:#0083b3" >   edit </a></td>
 		</tr>
 		@endforeach
 		</table>

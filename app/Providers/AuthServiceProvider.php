@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+
+use App\Models\Book;
+use App\Models\User;
+
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -25,6 +29,10 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        Gate::define('update_book', function (User $user, Book $book) {
+			if($user->role == 'admin' || $user->id == $book->creator_id)
+				return true;
+			return false;
+    });
     }
 }

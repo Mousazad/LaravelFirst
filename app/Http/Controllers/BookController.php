@@ -6,6 +6,8 @@ use App\Models\Book;
 use App\Models\Author;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class BookController extends Controller
 {
@@ -13,8 +15,8 @@ class BookController extends Controller
 	
 	public function __construct()
     {
-        $this->middleware('auth');
-        $this->middleware('admin')->except(['index','show']);;
+        $this->middleware('auth')->except(['index','show']);
+        $this->middleware('admin')->only(['destroy']);;
     }
 	
 	
@@ -26,6 +28,19 @@ class BookController extends Controller
     public function index()
     {
         $bks = Book::all();
+		foreach($bks as $b){
+			$b->eflag = false;
+			$b->dflag = false;
+			if (Auth::check()){
+				if(Auth::user()->role == 'admin'){
+					$b->eflag = true;
+					$b->dflag = true;
+				}
+				elseif(Auth::user()->id == $b->creator_id){
+					$b->eflag = true;
+				}
+			}
+		}
 		return view('book.index',['bks' => $bks]);
     }
 
@@ -92,6 +107,9 @@ class BookController extends Controller
      */
     public function edit(Book $book)
     {
+		if (! Gate::allows('update_book', $book)) {
+            abort(403);
+        }
 		$all_authors = Author::all();
 		$book->load('authors');
         return view('book.edit',['book' => $book, 'all_authors' => $all_authors]);
@@ -110,8 +128,12 @@ class BookController extends Controller
 			'title' => 'required|string|max:255',
 			'pubyear' => 'required|int|min:0|max:2022',
 		]);
-		$book->Update(["title" =>$request->title ,"publication-year"=>$request->pubyear ]);
-		return view('book.show',['book' => $book]);
+		if (! Gate::allows('update_book', $book)) {
+            abort(403);
+        }
+		$book->Update(["title" =>$request->title ,"","publication-year"=>$request->pubyear ]);
+		$url = Storage::url('public/files/'.$book->cover_file_name); 
+        return view('book.show',['book' => $book,'cover_url'=>$url ]);
     }
 
 

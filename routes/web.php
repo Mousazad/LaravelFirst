@@ -30,12 +30,15 @@ Route::get('/dashboard', function () {
 
 Route::get('/books/index',[BookController::class, 'index'])->name('booksIndex');
 Route::get('/books/show/{book}',[BookController::class, 'show'])->name('showBook');
-Route::get('/books/delete/{book}',[BookController::class, 'destroy'])->name('delBook');
 Route::post('/books/add',[BookController::class, 'store'])->name('storeBook');
 Route::get('/books/edit/{book}',[BookController::class, 'edit'])->name('editBook');
 Route::post('/books/update/{book}',[BookController::class, 'update'])->name('updateBook');
 Route::get('/books/remove_author/{book}/{author}',[BookController::class, 'removeAuthor'])->name('remAuthor');
 Route::post('/books/add_author/{book}',[BookController::class, 'addAuthor'])->name('addAuthorToBook');
+Route::post('/authors/add',[AuthorController::class, 'store'])->name('storeAuthor');
+Route::get('/authors/edit/{author}',[AuthorController::class, 'edit'])->name('editAuthor');
+Route::post('/authors/update/{author}',[AuthorController::class, 'update'])->name('updateAuthor');
+Route::get('/books/delete/{book}',[BookController::class, 'destroy'])->name('delBook');	
 
 
 
@@ -45,11 +48,6 @@ Route::middleware(['auth'])->group(function () {
 	Route::get('/authors/show/{author}',[AuthorController::class, 'show'])->name('showAuthor');	Route::get('/authors/delete/{author}',[AuthorController::class, 'destroy'])->name('delAuthor');
 });
 
-Route::middleware(['auth','admin'])->group(function () {
-	Route::post('/authors/add',[AuthorController::class, 'store'])->name('storeAuthor');
-	Route::get('/authors/edit/{author}',[AuthorController::class, 'edit'])->name('editAuthor');
-	Route::post('/authors/update/{author}',[AuthorController::class, 'update'])->name('updateAuthor');
-});
 
 Route::get('/test_sessions', function () {
 	
