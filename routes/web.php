@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Models\Book;
+use App\Jobs\SumTwoInteger;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\AuthorController;
 /*
@@ -15,6 +16,16 @@ use App\Http\Controllers\AuthorController;
 |
 */
 require __DIR__.'/auth.php';
+
+Route::get('/jobs', function () {
+	
+	dispatch(new SumTwoInteger(2,3));
+	dispatch(new SumTwoInteger(4,5));
+
+    return 'ok';
+});
+
+
 Route::get('/', function () {
     return view('welcome');
 });
