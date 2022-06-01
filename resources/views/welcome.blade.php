@@ -69,9 +69,33 @@
 
                             <div class="ml-12">
                                 <div class="mt-2 text-gray-600 dark:text-gray-400 text-sm">
-                                     click this <a href="{{ route('booksIndex') }}" class="underline">  link  </a> to view list of all books.
-                                </div>
+                                    click this <a href="{{ route('booksIndex') }}" class="underline">  link  </a> to view list of all books.
+									<br>
+									<span id="loadbooks">
+										OR load books here by this button!<br>
+									</span>
+									<button type="button" onclick="loadBooks()">load books</button>
+									
+								</div>
+
                             </div>
+							
+							<script>
+								function loadBooks() {
+								  const xhttp = new XMLHttpRequest();
+								  xhttp.onload = function() {
+									const books = JSON.parse(this.responseText);
+									var text = "";
+									for (let i = 0; i < books.length; i++) {
+										text += "<h3>" + books[i].title + "</h3>";
+									}
+									document.getElementById("loadbooks").innerHTML = text;
+								  }
+								  xhttp.open("POST", "/api/books/list");
+								  xhttp.send();
+								}
+							</script>
+							
                         </div>
 
 						<div class="p-6 border-t border-gray-200 dark:border-gray-700 md:border-l">
